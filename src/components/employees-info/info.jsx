@@ -1,6 +1,6 @@
 import "./info.css";
 
-const appInfo = () => {
+const AppInfo = () => {
   return (
     <div className="app-info">
       <h1>Працівники компанії</h1>
@@ -10,4 +10,4 @@ const appInfo = () => {
   );
 };
 
-export default appInfo;
+export default AppInfo;
