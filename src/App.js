@@ -11,12 +11,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        { name: "John C.", salary: 800, increase: false, id: 1 },
-        { name: "Alex M.", salary: 3000, increase: true, id: 2 },
-        { name: "Carl W.", salary: 5000, increase: false, id: 3 },
-      ],
+      data: [],
     };
+    this.newId = 4;
   }
   deleteItem = (id) => {
     this.setState(({ data }) => {
@@ -24,6 +21,22 @@ class App extends Component {
       const before = data.slice(0, index);
       const after = data.slice(index + 1);
       const newArr = [...before, ...after];
+      return {
+        data: newArr,
+      };
+    });
+  };
+
+  addItem = (name, salary) => {
+    const newItem = {
+      name: name.trim(),
+      salary: salary.trim(),
+      increase: false,
+      id: this.newId++,
+    };
+
+    this.setState(({ data }) => {
+      const newArr = [...data, newItem];
       return {
         data: newArr,
       };
@@ -39,7 +52,7 @@ class App extends Component {
           <Filter />
         </div>
         <EmployeeList data={this.state.data} onDelete={this.deleteItem} />
-        <EmployersAddForm />
+        <EmployersAddForm onAdd={this.addItem} />
       </div>
     );
   }
