@@ -15,12 +15,22 @@ class App extends Component {
     };
     this.newId = 4;
   }
+
+  componentDidMount() {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    this.setState({
+      data: users,
+    });
+  }
+
   deleteItem = (id) => {
     this.setState(({ data }) => {
       const index = data.findIndex((elem) => elem.id === id);
       const before = data.slice(0, index);
       const after = data.slice(index + 1);
       const newArr = [...before, ...after];
+
+      localStorage.setItem("users", JSON.stringify(newArr));
       return {
         data: newArr,
       };

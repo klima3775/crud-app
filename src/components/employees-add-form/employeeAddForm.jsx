@@ -21,6 +21,12 @@ class EmployersAddForm extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     this.props.onAdd(this.state.name, this.state.salary);
+
+    const newEmployer = { name: this.state.name, salary: this.state.salary };
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    users.push(newEmployer);
+    localStorage.setItem("users", JSON.stringify(users));
+
     this.setState({
       name: "",
       salary: "",
