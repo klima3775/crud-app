@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       data: [],
     };
-    this.newId = 4;
+    this.newId = 1;
   }
 
   componentDidMount() {
@@ -42,6 +42,7 @@ class App extends Component {
       name: name.trim(),
       salary: salary.trim(),
       increase: false,
+      rise: false,
       id: this.newId++,
     };
 
@@ -52,16 +53,55 @@ class App extends Component {
       };
     });
   };
+  onToggleIncrease = (id) => {
+    this.setState(({ data }) => {
+      const index = data.findIndex((elem) => elem.id === id);
+      const old = data[index];
+      const newItem = { ...old, increase: !old.increase };
+      const newArr = [
+        ...data.slice(0, index),
+        newItem,
+        ...data.slice(index + 1),
+      ];
+      localStorage.setItem("users", JSON.stringify(newArr));
+      return {
+        data: newArr,
+      };
+    });
+  };
+  onToggleRise = (id) => {
+    this.setState(({ data }) => {
+      const index = data.findIndex((elem) => elem.id === id);
+      const old = data[index];
+      const newItem = { ...old, rise: !old.rise };
+      const newArr = [
+        ...data.slice(0, index),
+        newItem,
+        ...data.slice(index + 1),
+      ];
+      localStorage.setItem("users", JSON.stringify(newArr));
+      return {
+        data: newArr,
+      };
+    });
+  };
 
   render() {
+    const employees = this.state.data.length;
+    const increased = this.state.data.filter((item) => item.increase).length;
     return (
       <div className="App">
-        <AppInfo />
+        <AppInfo employees={employees} increased={increased} />
         <div className="search-panel">
           <SearchPanel />
           <Filter />
         </div>
-        <EmployeeList data={this.state.data} onDelete={this.deleteItem} />
+        <EmployeeList
+          data={this.state.data}
+          onDelete={this.deleteItem}
+          onToggleIncrease={this.onToggleIncrease}
+          onToggleRise={this.onToggleRise}
+        />
         <EmployersAddForm onAdd={this.addItem} />
       </div>
     );
