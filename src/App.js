@@ -12,6 +12,7 @@ class App extends Component {
     super(props);
     this.state = {
       data: [],
+      term: "",
     };
     this.newId = 1;
   }
@@ -69,18 +70,32 @@ class App extends Component {
       };
     });
   };
+  searchEmploees = (items, term) => {
+    if (term.length === 0) {
+      return items;
+    }
+    return items.filter((item) => {
+      return item.name.indexOf(term) > -1;
+    });
+  };
+  onUpdateSearch = (term) => {
+    this.setState({ term });
+  };
+
   render() {
+    const { data, term } = this.state;
     const employees = this.state.data.length;
     const increased = this.state.data.filter((item) => item.increase).length;
+    const visibleData = this.searchEmploees(data, term);
     return (
       <div className="App">
         <AppInfo employees={employees} increased={increased} />
         <div className="search-panel">
-          <SearchPanel />
+          <SearchPanel onUpdateSearch={this.onUpdateSearch} />
           <Filter />
         </div>
         <EmployeeList
-          data={this.state.data}
+          data={visibleData}
           onDelete={this.deleteItem}
           onToggleProp={this.onToggleProp}
         />
