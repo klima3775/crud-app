@@ -10,7 +10,7 @@ class SearchPanel extends Component {
   }
 
   oneSearchPanel = (e) => {
-    const term = e.target.value;
+    const term = e.target.value.replace(/\s+/g, "");
     this.setState({ term });
     this.props.onUpdateSearch(term);
   };
