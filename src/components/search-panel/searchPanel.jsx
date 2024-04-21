@@ -1,5 +1,6 @@
 import "./searchPanel.css";
 import { Component } from "react";
+import { debounce } from "lodash";
 
 class SearchPanel extends Component {
   constructor(props) {
@@ -7,12 +8,13 @@ class SearchPanel extends Component {
     this.state = {
       term: "",
     };
+    this.debouncedSearch = debounce(this.props.onUpdateSearch, 300);
   }
 
   oneSearchPanel = (e) => {
     const term = e.target.value.replace(/\s+/g, "");
     this.setState({ term });
-    this.props.onUpdateSearch(term);
+    this.debouncedSearch(term);
   };
 
   render() {
