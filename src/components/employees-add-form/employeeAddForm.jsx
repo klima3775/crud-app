@@ -36,7 +36,7 @@ class EmployersAddForm extends Component {
   render() {
     return (
       <div className="app-add-form">
-        <h3>Добавьте нового сотрудника</h3>
+        <h3>Додайте нового працівника </h3>
         <form className="add-form d-flex" onSubmit={this.onSubmit}>
           <input
             type="text"
