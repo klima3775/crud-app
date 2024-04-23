@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./App.css";
 import AppInfo from "./components/employees-info/info";
@@ -7,71 +7,51 @@ import Filter from "./components/employees-filter/filterEmployee";
 import EmployeeList from "./components/employes-list/employeeList";
 import EmployersAddForm from "./components/employees-add-form/employeeAddForm";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      term: "",
-      filter: "all",
-    };
-    this.newId = 1;
-  }
+const App = () => {
+  const [data, setData] = useState([]);
+  const [term, setTerm] = useState("");
+  const [filter, setFilter] = useState("all");
+  let newId = 1;
 
-  componentDidMount() {
+  useEffect(() => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    this.setState({
-      data: users,
-    });
-  }
+    setData(users);
+  }, []);
 
-  deleteItem = (id) => {
-    this.setState(({ data }) => {
-      const index = data.findIndex((elem) => elem.id === id);
-      const before = data.slice(0, index);
-      const after = data.slice(index + 1);
-      const newArr = [...before, ...after];
+  const deleteItem = (id) => {
+    const index = data.findIndex((elem) => elem.id === id);
+    const before = data.slice(0, index);
+    const after = data.slice(index + 1);
+    const newArr = [...before, ...after];
 
-      localStorage.setItem("users", JSON.stringify(newArr));
-      return {
-        data: newArr,
-      };
-    });
+    localStorage.setItem("users", JSON.stringify(newArr));
+    setData(newArr);
   };
 
-  addItem = (name, salary) => {
+  const addItem = (name, salary) => {
     const newItem = {
       name: name.trim(),
       salary: salary.trim(),
       increase: false,
       rise: false,
-      id: this.newId++,
+      id: newId++,
     };
 
-    this.setState(({ data }) => {
-      const newArr = [...data, newItem];
-      return {
-        data: newArr,
-      };
-    });
+    const newArr = [...data, newItem];
+    setData(newArr);
   };
-  onToggleProp = (id, prop) => {
-    this.setState(({ data }) => {
-      const index = data.findIndex((elem) => elem.id === id);
-      const old = data[index];
-      const newItem = { ...old, [prop]: !old[prop] };
-      const newArr = [
-        ...data.slice(0, index),
-        newItem,
-        ...data.slice(index + 1),
-      ];
-      localStorage.setItem("users", JSON.stringify(newArr));
-      return {
-        data: newArr,
-      };
-    });
+
+  const onToggleProp = (id, prop) => {
+    const index = data.findIndex((elem) => elem.id === id);
+    const old = data[index];
+    const newItem = { ...old, [prop]: !old[prop] };
+    const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
+
+    localStorage.setItem("users", JSON.stringify(newArr));
+    setData(newArr);
   };
-  searchEmployees = (items, term) => {
+
+  const searchEmployees = (items, term) => {
     if (term.length === 0) {
       return items;
     }
@@ -79,10 +59,12 @@ class App extends Component {
       return item.name.toLowerCase().indexOf(term.toLowerCase()) > -1;
     });
   };
-  onUpdateSearch = (term) => {
-    this.setState({ term });
+
+  const onUpdateSearch = (term) => {
+    setTerm(term);
   };
-  filterEmployees = (items, filter) => {
+
+  const filterEmployees = (items, filter) => {
     switch (filter) {
       case "rise":
         return items.filter((item) => item.rise);
@@ -92,33 +74,30 @@ class App extends Component {
         return items;
     }
   };
-  onFilterSelect = (filter) => {
-    this.setState({ filter });
+
+  const onFilterSelect = (filter) => {
+    setFilter(filter);
   };
-  render() {
-    const { data, term, filter } = this.state;
-    const employees = this.state.data.length;
-    const increased = this.state.data.filter((item) => item.increase).length;
-    const visibleData = this.filterEmployees(
-      this.searchEmployees(data, term),
-      filter
-    );
-    return (
-      <div className="App">
-        <AppInfo employees={employees} increased={increased} />
-        <div className="search-panel">
-          <SearchPanel onUpdateSearch={this.onUpdateSearch} />
-          <Filter filter={filter} onFilterSelect={this.onFilterSelect} />
-        </div>
-        <EmployeeList
-          data={visibleData}
-          onDelete={this.deleteItem}
-          onToggleProp={this.onToggleProp}
-        />
-        <EmployersAddForm onAdd={this.addItem} />
+
+  const employees = data.length;
+  const increased = data.filter((item) => item.increase).length;
+  const visibleData = filterEmployees(searchEmployees(data, term), filter);
+
+  return (
+    <div className="App">
+      <AppInfo employees={employees} increased={increased} />
+      <div className="search-panel">
+        <SearchPanel onUpdateSearch={onUpdateSearch} />
+        <Filter filter={filter} onFilterSelect={onFilterSelect} />
       </div>
-    );
-  }
-}
+      <EmployeeList
+        data={visibleData}
+        onDelete={deleteItem}
+        onToggleProp={onToggleProp}
+      />
+      <EmployersAddForm onAdd={addItem} />
+    </div>
+  );
+};
 
 export default App;
