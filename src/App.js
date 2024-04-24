@@ -11,7 +11,6 @@ const App = () => {
   const [data, setData] = useState([]);
   const [term, setTerm] = useState("");
   const [filter, setFilter] = useState("all");
-  let newId = 1;
 
   useEffect(() => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -34,7 +33,7 @@ const App = () => {
       salary: salary.trim(),
       increase: false,
       rise: false,
-      id: newId++,
+      id: Date.now(),
     };
 
     const newArr = [...data, newItem];

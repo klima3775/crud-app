@@ -1,7 +1,6 @@
 .app-add-form {
-  height: 20vh;
   margin-top: 30px;
-  padding: 50px 25px 25px 25px;
+  padding: 25px;
   background-color: #3d5a80;
   border-radius: 4px;
   box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.15);
