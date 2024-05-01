@@ -23,9 +23,6 @@ const EmployersAddForm = (props) => {
     let users = JSON.parse(localStorage.getItem("users")) || [];
     users.push(newEmployer);
     localStorage.setItem("users", JSON.stringify(users));
-    JSON.parse(localStorage.getItem("users")) || [];
-    users.push(newEmployer);
-    localStorage.setItem("users", JSON.stringify(users));
 
     setName("");
     setSalary("");
